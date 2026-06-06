@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tunnel Vision S.M.O. — The Framework</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy-deep: #0a1628;
+    --navy-mid: #142339;
+    --navy-light: #1e3050;
+    --gold: #d4a868;
+    --gold-bright: #f5d287;
+    --gold-warm: #e89c5a;
+    --text-primary: #f5ede0;
+    --text-secondary: #a8a092;
+    --text-muted: #6e6a60;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy-deep);
+    color: var(--text-primary);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ═══════════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════════ */
+  .hero {
+    min-height: 100vh;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 24px;
+    overflow: hidden;
+  }
+
+  /* Background atmospheric layer — subtle gradient + texture */
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background:
+      radial-gradient(ellipse at 30% 40%,
+        rgba(212, 168, 104, 0.08) 0%,
+        rgba(20, 35, 57, 0.4) 40%,
+        rgba(10, 22, 40, 1) 75%),
+      linear-gradient(180deg, #0a1628 0%, #142339 100%);
+  }
+
+  /* Subtle grain overlay */
+  .hero-grain {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0.04;
+    background-image:
+      repeating-radial-gradient(circle at 17% 23%, transparent 0, rgba(255,255,255,0.6) 0.8px, transparent 1.5px),
+      repeating-radial-gradient(circle at 81% 67%, transparent 0, rgba(255,255,255,0.5) 0.6px, transparent 1.2px);
+    pointer-events: none;
+  }
+
+  /* Container holding hero content */
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  /* LEFT SIDE: Text/brand content */
+  .hero-text {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .pre-headline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.9;
+  }
+
+  .brand-mark {
+    font-family: 'Bebas Neue', 'Impact', sans-serif;
+    font-size: clamp(56px, 7vw, 96px);
+    line-height: 0.92;
+    letter-spacing: 0.04em;
+    color: var(--gold-bright);
+    text-shadow: 0 0 40px rgba(232, 156, 90, 0.25);
+  }
+
+  .brand-mark .smo {
+    display: block;
+    color: var(--gold);
+    margin-top: -8px;
+  }
+
+  .brand-tagline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    opacity: 0.85;
+    margin-top: -12px;
+  }
+
+  .divider-gold {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.6;
+    margin: 8px 0;
+  }
+
+  .book-title {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(32px, 4vw, 48px);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--text-primary);
+    line-height: 1.1;
+  }
+
+  .book-title em {
+    font-weight: 600;
+    font-style: italic;
+  }
+
+  .hero-pitch {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.55;
+    color: var(--text-secondary);
+    max-width: 480px;
+    font-weight: 400;
+  }
+
+  /* Email capture form */
+  .email-capture {
+    display: flex;
+    gap: 0;
+    max-width: 480px;
+    margin-top: 8px;
+    border: 1px solid rgba(212, 168, 104, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+    background: rgba(10, 22, 40, 0.6);
+    backdrop-filter: blur(10px);
+    transition: border-color 0.3s ease;
+  }
+
+  .email-capture:focus-within {
+    border-color: var(--gold);
+    box-shadow: 0 0 30px rgba(212, 168, 104, 0.15);
+  }
+
+  .email-capture input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 18px 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+    outline: none;
+  }
+
+  .email-capture input::placeholder {
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 11px;
+  }
+
+  .email-capture button {
+    background: var(--gold);
+    border: none;
+    padding: 0 28px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--navy-deep);
+    cursor: pointer;
+    transition: background 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .email-capture button:hover {
+    background: var(--gold-bright);
+  }
+
+  .form-note {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: -4px;
+  }
+
+  /* RIGHT SIDE: Eye logo / brand mark visual */
+  .hero-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .eye-container {
+    width: 100%;
+    max-width: 480px;
+    position: relative;
+  }
+
+  .eye-svg {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 0 60px rgba(232, 156, 90, 0.2));
+  }
+
+  /* Scroll indicator at bottom */
+  .scroll-hint {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0.6;
+    animation: pulse-fade 2.5s ease-in-out infinite;
+  }
+
+  .scroll-hint::after {
+    content: '';
+    width: 1px;
+    height: 24px;
+    background: linear-gradient(180deg, var(--gold) 0%, transparent 100%);
+  }
+
+  @keyframes pulse-fade {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 0.8; }
+  }
+
+  /* ═══════════════════════════════════════════════
+     RESPONSIVE: Mobile / tablet
+     ═══════════════════════════════════════════════ */
+  @media (max-width: 900px) {
+    .hero-content {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      text-align: center;
+    }
+    .hero-text {
+      order: 2;
+      align-items: center;
+    }
+    .hero-visual {
+      order: 1;
+    }
+    .eye-container {
+      max-width: 320px;
+    }
+    .hero-pitch {
+      margin: 0 auto;
+    }
+    .email-capture {
+      margin: 8px auto 0;
+    }
+    .divider-gold {
+      margin: 8px auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .hero {
+      padding: 80px 20px 100px;
+    }
+    .brand-mark {
+      font-size: 52px;
+    }
+    .book-title {
+      font-size: 26px;
+    }
+    .hero-pitch {
+      font-size: 16px;
+    }
+    .email-capture {
+      flex-direction: column;
+      border-radius: 4px;
+    }
+    .email-capture input {
+      text-align: center;
+      border-bottom: 1px solid rgba(212, 168, 104, 0.2);
+    }
+    .email-capture button {
+      padding: 16px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <!-- ═══════════════ HERO SECTION ═══════════════ -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grain"></div>
+
+    <div class="hero-content">
+
+      <!-- LEFT: Text + brand stack + email capture -->
+      <div class="hero-text">
+        <div class="pre-headline">A Framework for Traders — Coming Soon</div>
+
+        <h1 class="brand-mark">
+          TUNNEL VISION
+          <span class="smo">S.M.O.</span>
+        </h1>
+
+        <div class="brand-tagline">Strategic Moves Only</div>
+
+        <div class="divider-gold"></div>
+
+        <div class="book-title">The <em>Framework</em></div>
+
+        <p class="hero-pitch">
+          Written for the beginner options trader who's tired of guru-speak —
+          and for anyone who wants to understand the <em>why</em> behind the methodology,
+          not just the rules.
+        </p>
+
+        <!-- Email capture form — wired to placeholder action for now -->
+        <form class="email-capture" action="#" method="post" onsubmit="handleSubmit(event)">
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            required
+            aria-label="Email address"
+          />
+          <button type="submit">Notify Me</button>
+        </form>
+
+        <div class="form-note">
+          Get notified when the book drops · No spam, ever
+        </div>
+      </div>
+
+      <!-- RIGHT: Eye logo / brand visual -->
+      <div class="hero-visual">
+        <div class="eye-container">
+          <!-- Placeholder eye logo built in SVG.
+               Will be replaced with the actual Canva-exported eye when Greg uploads it. -->
+          <svg class="eye-svg" viewBox="0 0 480 280" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="eye-gold-outline" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f5d287"/>
+                <stop offset="50%" stop-color="#d4a868"/>
+                <stop offset="100%" stop-color="#8b6020"/>
+              </linearGradient>
+              <linearGradient id="iris-circle-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f5d287"/>
+                <stop offset="50%" stop-color="#d4a868"/>
+                <stop offset="100%" stop-color="#8b6020"/>
+              </linearGradient>
+              <filter id="eye-glow">
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                <feMerge>
+                  <feMergeNode in="coloredBlur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+
+            <!-- Eye outline: top lid + bottom lid forming almond shape -->
+            <path d="M 60 140 Q 240 30 420 140 Q 240 250 60 140 Z"
+                  fill="none"
+                  stroke="url(#eye-gold-outline)"
+                  stroke-width="4"
+                  stroke-linejoin="round"
+                  filter="url(#eye-glow)"/>
+
+            <!-- Iris circle (pupil) -->
+            <circle cx="240" cy="140" r="80"
+                    fill="none"
+                    stroke="url(#iris-circle-gold)"
+                    stroke-width="4"
+                    filter="url(#eye-glow)"/>
+
+            <!-- Chart inside the iris/pupil — price action with reversal -->
+            <g stroke="#f5d287" stroke-width="2.5" fill="none"
+               stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="190,120 200,135 212,155 224,170 236,180 240,170 246,150 256,128 268,110 282,98"/>
+            </g>
+
+            <!-- Down arrow at the low / pivot -->
+            <g fill="#ef4444" opacity="0.95">
+              <polygon points="240,178 236,170 244,170"/>
+            </g>
+
+            <!-- Up arrow at the reversal/rise -->
+            <g fill="#4ade80" opacity="0.95">
+              <polygon points="282,96 278,104 286,104"/>
+            </g>
+
+            <!-- TRADER label on left side of eye -->
+            <text x="120" y="146"
+                  font-family="IBM Plex Mono, monospace"
+                  font-size="13"
+                  font-weight="600"
+                  letter-spacing="2"
+                  fill="#d4a868"
+                  text-anchor="middle"
+                  opacity="0.9">TRADER</text>
+
+            <!-- HVAC label on right side of eye -->
+            <text x="360" y="146"
+                  font-family="IBM Plex Mono, monospace"
+                  font-size="13"
+                  font-weight="600"
+                  letter-spacing="2"
+                  fill="#d4a868"
+                  text-anchor="middle"
+                  opacity="0.9">HVAC</text>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Scroll hint at bottom -->
+    <div class="scroll-hint">
+      Scroll
+    </div>
+  </section>
+
+<script>
+  // Placeholder form handler — for now, just shows a confirmation message.
+  // When email service (Formspree, Mailchimp, ConvertKit, etc.) is chosen,
+  // we replace this with the actual integration.
+  function handleSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    const email = form.querySelector('input[type="email"]').value;
+    const button = form.querySelector('button');
+    const originalText = button.textContent;
+
+    button.textContent = "You're In";
+    button.style.background = '#4ade80';
+    form.querySelector('input').value = '';
+
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.style.background = '';
+    }, 2500);
+
+    console.log('Email captured (placeholder):', email);
+  }
+</script>
+
+</body>
+</html>
